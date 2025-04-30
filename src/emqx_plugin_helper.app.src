@@ -1,0 +1,15 @@
+{application, emqx_plugin_helper, [
+    {description, "Helper library for creating EMQX plugins"},
+    %% Don't change manually, use make bump-version
+    {vsn, "5.8.6"},
+    {registered, []},
+    {applications, [
+        kernel,
+        stdlib
+    ]},
+    {env, []},
+    {modules, [emqx_plugin_helper]},
+
+    {licenses, ["Apache-2.0"]},
+    {links, []}
+]}.
