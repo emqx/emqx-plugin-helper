@@ -1,35 +1,11 @@
 %%--------------------------------------------------------------------
 %% Copyright (c) 2017-2025 EMQ Technologies Co., Ltd. All Rights Reserved.
-%%
-%% Licensed under the Apache License, Version 2.0 (the "License");
-%% you may not use this file except in compliance with the License.
-%% You may obtain a copy of the License at
-%%
-%%     http://www.apache.org/licenses/LICENSE-2.0
-%%
-%% Unless required by applicable law or agreed to in writing, software
-%% distributed under the License is distributed on an "AS IS" BASIS,
-%% WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-%% See the License for the specific language governing permissions and
-%% limitations under the License.
 %%--------------------------------------------------------------------
 
 -ifndef(EMQX_MQTT_HRL).
 -define(EMQX_MQTT_HRL, true).
 
 -define(UINT_MAX, 16#FFFFFFFF).
-
-%%--------------------------------------------------------------------
-%% MQTT SockOpts
-%%--------------------------------------------------------------------
-
--define(MQTT_SOCKOPTS, [
-    binary,
-    {packet, raw},
-    {reuseaddr, true},
-    {backlog, 512},
-    {nodelay, true}
-]).
 
 %%--------------------------------------------------------------------
 %% MQTT Protocol Version and Names
@@ -59,7 +35,7 @@
 %% MQTT Share-Sub Internal
 %%--------------------------------------------------------------------
 
--record(share, {group :: emqx_types:group(), topic :: emqx_types:topic()}).
+-record(share, {group :: emqx_plugin_helper_types:group(), topic :: emqx_plugin_helper_types:topic()}).
 
 %% guards
 -define(IS_TOPIC(T),
@@ -711,9 +687,5 @@ end).
 
 -define(THROW_FRAME_ERROR(Reason), erlang:throw({?FRAME_PARSE_ERROR, Reason})).
 -define(THROW_SERIALIZE_ERROR(Reason), erlang:throw({?FRAME_SERIALIZE_ERROR, Reason})).
-
--define(MAX_PAYLOAD_FORMAT_SIZE, 1024).
--define(TRUNCATED_PAYLOAD_SIZE, 100).
--define(MAX_PAYLOAD_FORMAT_LIMIT(Bin), (byte_size(Bin) =< ?MAX_PAYLOAD_FORMAT_SIZE)).
 
 -endif.

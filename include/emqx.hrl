@@ -1,17 +1,5 @@
 %%--------------------------------------------------------------------
 %% Copyright (c) 2017-2025 EMQ Technologies Co., Ltd. All Rights Reserved.
-%%
-%% Licensed under the Apache License, Version 2.0 (the "License");
-%% you may not use this file except in compliance with the License.
-%% You may obtain a copy of the License at
-%%
-%%     http://www.apache.org/licenses/LICENSE-2.0
-%%
-%% Unless required by applicable law or agreed to in writing, software
-%% distributed under the License is distributed on an "AS IS" BASIS,
-%% WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-%% See the License for the specific language governing permissions and
-%% limitations under the License.
 %%--------------------------------------------------------------------
 
 -ifndef(EMQX_HRL).
@@ -52,7 +40,7 @@
 
 -record(subscription, {topic, subid, subopts}).
 
--include_lib("emqx_utils/include/emqx_message.hrl").
+-include("emqx_message.hrl").
 
 -record(delivery, {
     %% Sender of the delivery
@@ -66,8 +54,8 @@
 %%--------------------------------------------------------------------
 
 -record(share_dest, {
-    session_id :: emqx_session:session_id(),
-    group :: emqx_types:group()
+    session_id :: term(), %% emqx_session:session_id()
+    group :: emqx_plugin_helper_types:group()
 }).
 
 -record(route, {
@@ -75,10 +63,10 @@
     dest ::
         node()
         | {binary(), node()}
-        | emqx_session:session_id()
+        | term() %% emqx_session:session_id()
         %% One session can also have multiple subscriptions to the same topic through different groups
         | #share_dest{}
-        | emqx_external_broker:dest()
+        | term() %% emqx_external_broker:dest()
 }).
 
 %%--------------------------------------------------------------------
@@ -99,7 +87,7 @@
 %%--------------------------------------------------------------------
 
 -record(banned, {
-    who :: emqx_types:banned_who(),
+    who :: emqx_plugin_helper_types:banned_who(),
     by :: binary(),
     reason :: binary(),
     at :: integer(),
@@ -116,5 +104,11 @@
 %% Client Attributes
 %%--------------------------------------------------------------------
 -define(CLIENT_ATTR_NAME_TNS, <<"tns">>).
+
+%%--------------------------------------------------------------------
+%% Metrics
+%%--------------------------------------------------------------------
+
+-define(ACCESS_CONTROL_METRICS_WORKER, access_control_metrics).
 
 -endif.

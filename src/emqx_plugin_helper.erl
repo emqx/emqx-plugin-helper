@@ -20,13 +20,13 @@
     get_config/1
 ]).
 
--type application_name() :: atom().
+-type name_vsn() :: binary().
 
 %%--------------------------------------------------------------------
 %% API
 %%--------------------------------------------------------------------
 
--spec get_config(application_name()) -> term().
+-spec get_config(name_vsn()) -> term().
 get_config(NameVsn) ->
     case emqx_plugins:get_config(NameVsn) of
         %% Pre-5.9.0

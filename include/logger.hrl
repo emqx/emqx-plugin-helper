@@ -1,17 +1,5 @@
 %%--------------------------------------------------------------------
 %% Copyright (c) 2018-2025 EMQ Technologies Co., Ltd. All Rights Reserved.
-%%
-%% Licensed under the Apache License, Version 2.0 (the "License");
-%% you may not use this file except in compliance with the License.
-%% You may obtain a copy of the License at
-%%
-%%     http://www.apache.org/licenses/LICENSE-2.0
-%%
-%% Unless required by applicable law or agreed to in writing, software
-%% distributed under the License is distributed on an "AS IS" BASIS,
-%% WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-%% See the License for the specific language governing permissions and
-%% limitations under the License.
 %%--------------------------------------------------------------------
 
 -ifndef(EMQX_LOGGER_HRL).
@@ -30,10 +18,12 @@
             logger:log(
                 Level,
                 (Data),
-                maps:merge(Meta, #{
+                (begin
+                    Meta
+                end)#{
                     mfa => {?MODULE, ?FUNCTION_NAME, ?FUNCTION_ARITY},
                     line => ?LINE
-                })
+                }
             );
         false ->
             ok
@@ -75,12 +65,22 @@
 %% Internal macro
 -define(_DO_TRACE(Tag, Msg, Meta),
     case persistent_term:get(?TRACE_FILTER, []) of
-        [] -> ok;
+        [] ->
+            ok;
         %% We can't bind filter list to a variable because we pollute the calling scope with it.
         %% We also don't want to wrap the macro body in a fun
         %% because this adds overhead to the happy path.
         %% So evaluate `persistent_term:get` twice.
-        _ -> emqx_trace:log(persistent_term:get(?TRACE_FILTER, []), Msg, (Meta)#{trace_tag => Tag})
+        _ ->
+            emqx_trace:log(
+                persistent_term:get(?TRACE_FILTER, []),
+                Msg,
+                (begin
+                    Meta
+                end)#{
+                    trace_tag => Tag
+                }
+            )
     end
 ).
 
@@ -91,7 +91,11 @@
     ?_DO_TRACE(Tag, Msg, Meta),
     ?SLOG(
         Level,
-        (Meta)#{msg => Msg, tag => Tag},
+        (begin
+            Meta
+        end)#{
+            msg => Msg, tag => Tag
+        },
         #{is_trace => false}
     )
 end).
