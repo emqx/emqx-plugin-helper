@@ -1,7 +1,8 @@
+%% -*- mode: erlang -*-
 {application, emqx_plugin_helper, [
     {description, "Helper library for creating EMQX plugins"},
     %% Don't change manually, use make bump-version
-    {vsn, "5.9.1"},
+    {vsn, "5.9.2"},
     {registered, []},
     {applications, [
         kernel,
