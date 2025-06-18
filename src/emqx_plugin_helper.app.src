@@ -1,3 +1,4 @@
+%% -*- mode: erlang -*-
 {application, emqx_plugin_helper, [
     {description, "Helper library for creating EMQX plugins"},
     %% Don't change manually, use make bump-version
