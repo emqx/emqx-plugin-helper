@@ -2,7 +2,7 @@
 {application, emqx_plugin_helper, [
     {description, "Helper library for creating EMQX plugins"},
     %% Don't change manually, use make bump-version
-    {vsn, "5.9.2"},
+    {vsn, "5.10.5"},
     {registered, []},
     {applications, [
         kernel,

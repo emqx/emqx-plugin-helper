@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2018-2025 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2018-2026 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%--------------------------------------------------------------------
 
 -ifndef(EMQX_LOGGER_HRL).
@@ -91,6 +91,21 @@
     ?_DO_TRACE(Tag, Msg, Meta),
     ?SLOG(
         Level,
+        (begin
+            Meta
+        end)#{
+            msg => Msg, tag => Tag
+        },
+        #{is_trace => false}
+    )
+end).
+
+%% Only evaluate when necessary
+-define(TRACE_THROTTLE(Level, UniqueKey, Tag, Msg, Meta), begin
+    ?_DO_TRACE(Tag, Msg, Meta),
+    ?SLOG_THROTTLE(
+        Level,
+        UniqueKey,
         (begin
             Meta
         end)#{
