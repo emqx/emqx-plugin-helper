@@ -19,7 +19,7 @@ Add as a dependency (the plugin generator will do that automatically) to the plu
 ```erlang
 {deps,
     [
-        {emqx_plugin_helper, {git, "https://github.com/emqx/emqx_plugin_helper.git", {tag, "v5.9.2"}}}
+        {emqx_plugin_helper, {git, "https://github.com/emqx/emqx_plugin_helper.git", {tag, "v5.10.5"}}}
     ]
 }
 ```
