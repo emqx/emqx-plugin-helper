@@ -24,11 +24,14 @@ function update_type_references() {
     ## Change emqx_types:foo_type() to emqx_plugin_helper_types:foo_type()
     perl -i -pe 's/\bemqx_types:(\w+)\(\)/emqx_plugin_helper_types:\1()/g' "${file}"
 
+    ## Change emqx_utils_types:foo_type() to emqx_plugin_helper_utils_types:foo_type()
+    perl -i -pe 's/\bemqx_utils_types:(\w+)\(\)/emqx_plugin_helper_utils_types:\1()/g' "${file}"
+
     ## Change
     ##  xxxx:type().
     ## to
     ##  term(). %% xxxx:type()
-    local subst_to_term='s/\b(?!(?:emqx_plugin_helper_types|inet):)(\w+:\w+)\(\)(.*)/term()\2 %% \1()/g'
+    local subst_to_term='s/\b(?!(?:emqx_plugin_helper_types|emqx_plugin_helper_utils_types|inet):)(\w+:\w+)\(\)(.*)/term()\2 %% \1()/g'
     perl -i -pe "${subst_to_term}" "${file}"
 }
 
@@ -40,7 +43,7 @@ header_files=(\
     emqx/include/logger.hrl \
     emqx/include/types.hrl \
     emqx/include/emqx.hrl\
-    emqx_utils/include/emqx_message.hrl\
+    emqx_utils/include/emqx_message.hrl
 )
 
 # ensure dir
@@ -51,10 +54,10 @@ for header in "${header_files[@]}"; do
 done
 
 fetch "emqx/src/emqx_types.erl" "src/emqx_plugin_helper_types.erl"
-
-
-## Update the module name to correspond the file name
 sed -i 's/-module(emqx_types)./-module(emqx_plugin_helper_types)./' "src/emqx_plugin_helper_types.erl"
+
+fetch "emqx_utils/src/emqx_utils_types.erl" "src/emqx_plugin_helper_utils_types.erl"
+sed -i 's/-module(emqx_utils_types)./-module(emqx_plugin_helper_utils_types)./' "src/emqx_plugin_helper_utils_types.erl"
 
 ## Update the type references in header files
 for header in "${header_files[@]}"; do
@@ -63,6 +66,7 @@ done
 
 ## Update the type references in the very type file
 update_type_references "src/emqx_plugin_helper_types.erl"
+update_type_references "src/emqx_plugin_helper_utils_types.erl"
 
 ## Include the vendored message.hrl
 sed -i 's/-include_lib("emqx_utils\/include\/emqx_message.hrl")/-include("emqx_message.hrl")/' "include/emqx.hrl"

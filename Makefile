@@ -1,5 +1,6 @@
 REBAR = $(CURDIR)/rebar3
 SCRIPTS = $(CURDIR)/scripts
+EMQX_TAG ?= e5.10.5
 
 .PHONY: all
 all: compile
@@ -37,4 +38,3 @@ bump-version:
 .PHONY: vendor-emqx-headers
 vendor-emqx-headers:
 	./scripts/vendor-emqx-headers.sh $(EMQX_TAG)
-

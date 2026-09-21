@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2018-2025 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2018-2026 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%--------------------------------------------------------------------
 
 -module(emqx_plugin_helper_types).
@@ -148,7 +148,8 @@
     socktype := socktype(),
     sockname := peername(),
     peername := peername(),
-    peercert => nossl | undefined | term(), %% esockd_peercert:peercert()
+    %% esockd_peercert:peercert()
+    peercert => nossl | undefined | term(),
     conn_mod := module(),
     proto_name => binary(),
     proto_ver => proto_ver(),
@@ -230,17 +231,9 @@
 -type subscriber() :: {pid(), subid()}.
 -type payload() :: binary() | iodata().
 -type message() :: #message{}.
--type flag() :: sys | dup | retain | atom().
--type flags() :: #{flag() := boolean()}.
--type headers() :: #{
-    proto_ver => proto_ver(),
-    protocol => protocol(),
-    username => username(),
-    peerhost => peerhost(),
-    properties => properties(),
-    allow_publish => boolean(),
-    atom() => term()
-}.
+-type flag() :: emqx_plugin_helper_utils_types:flag().
+-type flags() :: emqx_plugin_helper_utils_types:flags().
+-type headers() :: emqx_plugin_helper_utils_types:headers().
 
 -type banned() :: #banned{}.
 -type banned_who() ::
@@ -249,7 +242,8 @@
     | {username, binary()}
     | {clientid_re, {_RE :: tuple(), binary()}}
     | {username_re, {_RE :: tuple(), binary()}}
-    | {peerhost_net, term()}. %% esockd_cidr:cidr()
+    %% esockd_cidr:cidr()
+    | {peerhost_net, term()}.
 
 -type deliver() :: {deliver, topic(), message()}.
 -type delivery() :: #delivery{}.
@@ -258,18 +252,29 @@
     [
         {node(), topic(), deliver_result()}
         | {share, topic(), deliver_result()}
-        | {term(), topic(), deliver_result()} %% emqx_external_broker:dest()
+        %% emqx_external_broker:dest()
+        | {term(), topic(), deliver_result()}
         | persisted
     ]
     %% If schema validation failure action is set to `disconnect'.
     | disconnect
     %% If caller specifies `hook_prohibition_as_error => true'.
     | {blocked, message()}.
--type route() :: #route{}.
+-type mem_session_route() :: #route{
+    topic :: binary(),
+    dest :: node() | {binary(), node()}
+}.
+-type external_route() :: #route{
+    topic :: binary(),
+    %% emqx_external_broker:dest()
+    dest :: term()
+}.
+-type route() :: mem_session_route() | external_route().
 -type route_entry() :: {topic(), node()} | {topic, group()}.
 -type command() :: #command{}.
 
--type caps() :: term(). %% emqx_mqtt_caps:caps()
+%% emqx_mqtt_caps:caps()
+-type caps() :: term().
 -type channel_attrs() :: #{atom() => term()}.
 -type infos() :: #{atom() => term()}.
 -type stats() :: [{atom(), term()}].

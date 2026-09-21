@@ -5,6 +5,12 @@ EMQX Plugin Helper is a helper library for creating EMQX plugins.
 It's main purpose is to provide the most common macros and records from EMQX to the plugin
 without the need to depend on a large part of EMQX in compile time.
 
+## EMQX baseline
+
+The vendored headers and types come from EMQX Enterprise `e5.10.5`.
+Refresh them with `make vendor-emqx-headers`.
+To use another tag, run `make vendor-emqx-headers EMQX_TAG=<tag>`.
+
 ## Usage
 
 Add as a dependency (the plugin generator will do that automatically) to the plugin's `rebar.lock`:
